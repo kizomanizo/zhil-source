@@ -1,0 +1,89 @@
+extends layout
+
+block content
+    div(class="container")
+        h2=client.firstname +" "+client.middlename+" "+client.lastname
+        div(class="row")
+            div(class="col-sm-4")
+                table(class="table")
+                    thead
+                        tr
+                            th(scope="col") Item
+                            th(scope="col") Detail
+                    tbody
+                            tr
+                                td F-Name
+                                td= client.firstname
+                            tr
+                                td L-Name
+                                td= client.lastname
+                            tr
+                                td Sex
+                                td= client.sex
+                            tr
+                                td Birthplace
+                                td= client.place_of_birth
+                            tr
+                                td Ward
+                                td= client.ward
+                            tr
+                                td Village
+                                td= client.village
+
+            div(class="col-sm-4")
+                table(class="table table-dark")
+                    thead
+                        tr
+                            th(scope="col") Item
+                            th(scope="col") Detail
+                    tbody
+                            tr
+                                td ULN
+                                td= client.unified_lifetime_Number
+                            tr
+                                td NIN
+                                td= client.national_id
+                            tr
+                                td VIN
+                                td= client.voter_id
+                            tr
+                                td ICHF
+                                td= client.ichf_id
+                            tr
+                                td DL
+                                td= client.driver_license_id
+                            tr
+                                td RITA
+                                td= client.birth_certificate_entry_number
+            
+            div(class="col-sm-4")
+                table(class="table")
+                    thead
+                        tr
+                            th(scope="col") Item
+                            th(scope="col") Detail
+                    tbody
+                            tr
+                                td Mobile
+                                td= client.phone_number
+                            tr
+                                td CTC ID
+                                td= client.ctc_id
+                            tr
+                                td TB ID
+                                td= client.tb_id
+                            tr
+                                td Family
+                                td= client.family_linkages
+                            tr
+                                td Others
+                                td= client.other_linkages
+                            tr
+                                td Encounter
+                                td= client.place_encountered
+
+        p To send the client to the NHCR via HL7 press 'Push to NHCR'
+        br
+        a(href="/clients/push/"+client.id type="button" class="btn btn-primary") Push to NHCR
+        | 
+        a(href="/clients" type="button" class="btn btn-secondary") Show All Clients

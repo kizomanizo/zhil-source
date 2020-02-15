@@ -1,0 +1,33 @@
+extends layout
+
+block content
+    div(class="container")
+        h2 All the clients
+        p Loaded #{kurasa}
+        div(class="row")
+            div(class="col-lg")
+            table(class="table")
+                thead
+                    tr
+                        th(scope="col") ID
+                        th(scope="col") First Name
+                        th(scope="col") Middle Name
+                        th(scope="col") Last Name
+                        th(scope="col") NIN
+                        th(scope="col") Region
+                        th(scope="col") Ward
+                        th(scope="col") Phone Number
+                        th(scope="col") View
+                tbody
+                    each client in clients
+                        tr
+                            th(scope="row")= client.id
+                            td= client.firstname
+                            td= client.middlename
+                            td= client.lastname
+                            td= client.national_id
+                            td= client.ward
+                            td= client.village
+                            td= client.phone_number
+                            td
+                                a(href='/clients/details/'+client.id) More
