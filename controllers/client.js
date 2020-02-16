@@ -1,10 +1,27 @@
+const express = require('express');
+const app = express();
 const Client = require('../models').Client;
+
+var hl7 = require('simple-hl7');
 
 module.exports = {
     // List all clients in the system
-    all(_req, res) {
-        Client.findAll()
-        .then(clients => res.render('clients', {"clients": clients}))
+    all(req, res) {
+        // Define the page that loads paginated answers
+        const page = req.query.page || 1;
+        const limit = 10;
+        const offset = 10;
+        Client.findAndCountAll({
+            limit: limit,
+            offset: (page - 1) * offset,
+            order: [['id', 'DESC']],
+            where: { status: 0 },
+        })
+        .then(clients => res.render('clients', {
+            "clients": clients.rows,
+            "pagesCount": Math.ceil(clients.count/limit),
+            "currentPage": page,
+        }))
         .catch(error => res.status(400).send(error));
     },
  
@@ -37,6 +54,34 @@ module.exports = {
             entity: client,
     }))
       .catch(error => res.status(400).send(error));
+    },
+
+    // Push the client to a HL7 source
+    push(req, res) {
+    ///////////////////CLIENT/////////////////////
+    patient = Client.findByPk(req.params.ClientId);
+        var client = hl7.Server.createTcpClient('localhost', 60920);
+
+        //create a message
+        var msg = new hl7.Message(
+                            res.send(patient.id),
+                            "EPIC",
+                            "EPICADT",
+                            "SMS",
+                            "199912271408",
+                            "CHARRIS",
+                            ["ADT", "A04"], //This field has 2 components
+                            "1817457",
+                            "D",
+                            "2.5"
+                        );
+    console.log('******sending message*****')
+    client.send(msg, function(err, ack) {
+    console.log('******ack received*****')
+    console.log(ack.log());
+    });
+    ///////////////////CLIENT/////////////////////
+    // console.log(res.send(patient.id));
     },
 
 };

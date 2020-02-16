@@ -3,7 +3,7 @@ extends layout
 block content
     div(class="container")
         h2 All the clients
-        p Loaded #{kurasa}
+        p= pagesCount
         div(class="row")
             div(class="col-lg")
             table(class="table")
@@ -31,3 +31,20 @@ block content
                             td= client.phone_number
                             td
                                 a(href='/clients/details/'+client.id) More
+        div(class="row")
+            block content
+                .row
+                nav(aria-label='Page navigation example').d-flex.justify-content-center
+                    ul.pagination
+                        if currentPage > 1
+                            li.page-item
+                                a.page-link(href=`?page=${currentPage - 1}`) Previous
+
+                        - var i = 1;
+                        while i <= pagesCount
+                            li.page-item
+                                a.page-link(href=`?page=${i}`)= i++
+
+                        if currentPage < pagesCount
+                            li.page-item
+                                a.page-link(href=`?page=${parseInt(currentPage) + 1}`) Next

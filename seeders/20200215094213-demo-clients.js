@@ -3,7 +3,7 @@ const faker = require('faker');
 module.exports = {
     up: (queryInterface, Sequelize) => {
         let records = [];
-        const record_limit = 20;
+        const record_limit = 123;
         let record_counter = 0;
         while (record_counter < record_limit) {
             records = [
