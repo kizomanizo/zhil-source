@@ -60,7 +60,6 @@ module.exports = {
     push(req, res) {
         var patient = Client.findByPk(req.params.ClientId);
         patient.then(function (patient) {
-            var patient_id = JSON.stringify(patient.id)
             var client = hl7.Server.createTcpClient('localhost', 60920);
             // create a message
             var adt = new hl7.Message(
@@ -183,137 +182,139 @@ module.exports = {
                 console.log('******ack received******')
                 console.log(ack.log())
                 // patient.update({status: 1}, {where: {id: req.params.ClientId}})
-            })
+            }
+            )
         })
     },
 
     // Push all the clients to a HL7 source
-    push(req, res) {
+    pushAll(req, _res) {
         var patient = Client.findByPk(req.params.ClientId);
-        patient.then(function (patient) {
-            var patient_id = JSON.stringify(patient.id)
-            var client = hl7.Server.createTcpClient('localhost', 60920);
-            // create a message
-            var adt = new hl7.Message(
-                    "Manyara RRH",
-                    "AfyaCare EMR",
-                    "NHCR",
-                    "MOH",
-                    Date.now(),
+        arr.forEach(patient => {
+            patient.then(function (patient) {
+                var client = hl7.Server.createTcpClient('localhost', 60920);
+                // create a message
+                var adt = new hl7.Message(
+                        "Manyara RRH",
+                        "AfyaCare EMR",
+                        "NHCR",
+                        "MOH",
+                        Date.now(),
+                        "",
+                        ["ADT", "A08", "ADT_A08"],
+                        "7",
+                        "P",
+                        "2.3.1",
+                    );
+                    adt.addSegment(
+                        "EVN",
+                        "",
+                        Math.floor(Date.now()),
+                    );
+                    adt.addSegment(
+                        "PID",
+                        "",
+                        "",
+                        [
+                            patient.ctc_id,
+                            "",
+                            "",
+                            "Manyara RRH Afyacare",
+                            "",
+                            "MRRH OPD",
+                            "",
+                            patient.lastname,
+                            patient.firstname,
+                            patient.middlename,
+                            "",
+                            "",
+                            "",
+                            "L",
+                        ],
+                        "",
+                        patient.date_of_birth,
+                        patient.sex,
+                        [
+                            "",
+                            "",
+                        ],
+                        "",
+                        [
+                            patient.hamlet,
+                            patient.council + "*" +patient.ward + "*" + patient.village,
+                            patient.council,
+                            patient.region,
+                            "",
+                            "",
+                            "H~" + patient.hamlet,
+                            patient.council + "*" +patient.ward + "*" + patient.village,
+                            patient.council,
+                            patient.region,
+                            "",
+                            "",
+                            "C~" + patient.hamlet,
+                            patient.council + "*" +patient.ward + "*" + patient.village,
+                            patient.council,
+                            patient.region,
+                            "",
+                            "",
+                            "BR",
+                        ],
+                        "",
+                        [
+                            "", "PRN", "", "PH", "", "", patient.phone, patient.phone,
+                        ],
+                        "",
+                        "",
+                        "",
+                        "",
+                        patient.unified_lifetime_number,
+                        patient.driver_license_id,
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        patient.national_id,
+                    );
+                adt.addSegment(
+                    "PV1",
                     "",
-                    ["ADT", "A08", "ADT_A08"],
-                    "7",
-                    "P",
-                    "2.3.1",
+                    " ",
                 );
                 adt.addSegment(
-                    "EVN",
+                    "IN1",
                     "",
-                    Math.floor(Date.now()),
+                    patient.nhif_id,
+                    "",
+                    "NHIF",
                 );
                 adt.addSegment(
-                    "PID",
-                    "",
-                    "",
+                    "ZXT",
+                    patient.voter_id,
                     [
-                        patient.ctc_id,
+                        patient.birth_certificate_entry_number,
+                        "TZA",
+                        "BTH_CRT",
                         "",
-                        "",
-                        "Manyara RRH Afyacare",
-                        "",
-                        "MRRH OPD",
-                        "",
-                        patient.lastname,
-                        patient.firstname,
-                        patient.middlename,
-                        "",
-                        "",
-                        "",
-                        "L",
-                    ],
-                    "",
-                    patient.date_of_birth,
-                    patient.sex,
-                    [
-                        "",
-                        "",
-                    ],
-                    "",
-                    [
-                        patient.hamlet,
-                        patient.council + "*" +patient.ward + "*" + patient.village,
-                        patient.council,
-                        patient.region,
-                        "",
-                        "",
-                        "H~" + patient.hamlet,
-                        patient.council + "*" +patient.ward + "*" + patient.village,
-                        patient.council,
-                        patient.region,
-                        "",
-                        "",
-                        "C~" + patient.hamlet,
-                        patient.council + "*" +patient.ward + "*" + patient.village,
-                        patient.council,
-                        patient.region,
-                        "",
-                        "",
-                        "BR",
-                    ],
-                    "",
-                    [
-                        "", "PRN", "", "PH", "", "", patient.phone, patient.phone,
+                        "Tanzania",
                     ],
                     "",
                     "",
-                    "",
-                    "",
-                    patient.unified_lifetime_number,
-                    patient.driver_license_id,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    patient.national_id,
                 );
-            adt.addSegment(
-                "PV1",
-                "",
-                " ",
-            );
-            adt.addSegment(
-                "IN1",
-                "",
-                patient.nhif_id,
-                "",
-                "NHIF",
-            );
-            adt.addSegment(
-                "ZXT",
-                patient.voter_id,
-                [
-                    patient.birth_certificate_entry_number,
-                    "TZA",
-                    "BTH_CRT",
-                    "",
-                    "Tanzania",
-                ],
-                "",
-                "",
-            );
 
-                var parser = new hl7.Parser();
+                    var parser = new hl7.Parser();
 
-                var msg = parser.parse(adt.toString());
+                    var msg = parser.parse(adt.toString());
 
-                console.log('******sending message******')
-                client.send(msg, function(err, ack) {
-                console.log('******ack received******')
-                console.log(ack.log());
-            })
+                    console.log('******sending message******')
+                    client.send(msg, function(err, ack) {
+                    console.log('******ack received******')
+                    console.log(ack.log());
+                })
+                })
             })
     },
 

@@ -62,7 +62,7 @@ function getClientFirstname() {
         'Joseph', 'Peter', 'Mohamed', 'Abdul', 'Isack', 'Celestine', 'Cosmas',
         'Ayubu', 'Paul', 'Winnie', 'Dativa', 'Zaynab', 'Grace', 'Erick', 'Jafari',
     ];
-    return firstNames[getRandomIndex(firstNames.length)];
+    return firstNames[getRandomIndex(firstNames.length -1)];
 }
 
 function getClientMiddlename() {
@@ -71,7 +71,7 @@ function getClientMiddlename() {
         'Ahmed', 'Abdallah', 'Patrick', 'Sosthenes', 'Marko', 'Peter',
         'Baraka', 'Neema', 'Kheri', 'Mfugale', 'Rashid',
     ];
-    return  middleNames[getRandomIndex(middleNames.length)];
+    return  middleNames[getRandomIndex(middleNames.length -1)];
 }
 
 function getClientLastname() {
@@ -80,7 +80,7 @@ function getClientLastname() {
         'Juma', 'Alfayo', 'Slaa', 'Tluway', 'Boay', 'Slegeray', 'Kulle', 'Maleyeck',
         'Fisoo', 'Sulle', 'Burra', 'Baha', 'Matle', 'Kizito',
     ];
-    return lastNames[getRandomIndex(lastNames.length)];
+    return lastNames[getRandomIndex(lastNames.length -1)];
 }
 
 function getBirthRegions() {
@@ -89,7 +89,7 @@ function getBirthRegions() {
         'Manyara', 'Mara', 'Mbeya', 'Morogoro', 'Mtwara', 'Mwanza', 'Njombe', 'Pemba', 'Pwani', 'Rukwa', 'Ruvuma',
         'Shinyanga', 'Simiyu', 'Singida', 'Tabora', 'Tanga', 'Unguja',
     ];
-    return regions[getRandomIndex(regions.length)];
+    return regions[getRandomIndex(regions.length -1)];
 }
 
 function getRegions() {
@@ -97,7 +97,7 @@ function getRegions() {
         'Arusha',
         'Manyara',
     ];
-    return regions[getRandomIndex(regions.length)];
+    return regions[getRandomIndex(regions.length -1)];
 }
 
 function getCouncils() {
@@ -109,7 +109,7 @@ function getCouncils() {
         'Kiteto',
         'Mbulu',
     ];
-    return councils[getRandomIndex(councils.length)];
+    return councils[getRandomIndex(councils.length -1)];
 }
 
 function getWards() {
@@ -122,7 +122,7 @@ function getWards() {
         'Emboret', 'Endiamtu', 'Komolo', 'Mererani', 'Naberera', 'Orkesumet', 'Terrat',
     ];
 
-    return wards[getRandomIndex(wards.length)];
+    return wards[getRandomIndex(wards.length -1)];
 }
 
 function getHamlets() {
@@ -130,7 +130,7 @@ function getHamlets() {
         'Endachini', 'Maqatay', 'Sokoni', 'Mjini Kati', 'Toroka Uje', 'Nyamahoma',
         'Maweni', 'Tutani', 'Mpepo', 'Mvumo', 'Kivulini', 'Tulivu',
     ];
-    return hamlets[getRandomIndex(hamlets.length)];
+    return hamlets[getRandomIndex(hamlets.length -1)];
 }
 
 function getVillages() {
@@ -138,7 +138,7 @@ function getVillages() {
         'Endagichang', 'Dabil', 'Taptap', 'Ubwegeni', 'Mwenge', 'Mapambano', 'Mlinganyo', 'Gidabudash', 'Qorro', 'Aqweso', 'Qoroda',
         'Qameyu', 'Qorro', 'Tutlat', 'Barabarani', 'Mwisho', 'Mpungani', 'Pilau', 'Chuini', 'Robayambao', 'Mtambowagongo',
     ]
-    return villages[getRandomIndex(villages.length)];
+    return villages[getRandomIndex(villages.length -1)];
 }
 
 function getRandomPhoneNumber() {
@@ -151,8 +151,8 @@ function getRandomPhoneNumber() {
         '0653',
         '0755',
     ];
-    return prefixes[getRandomIndex(prefixes.length)] !== 'undefined' ?
-        prefixes[getRandomIndex(prefixes.length)] + " " + generateNthDitigNumber(3) + " " + generateNthDitigNumber(3)
+    return prefixes[getRandomIndex(prefixes.length -1)] !== 'undefined' ?
+        prefixes[getRandomIndex(prefixes.length -1)] + " " + generateNthDitigNumber(3) + " " + generateNthDitigNumber(3)
         :
         getRandomPhoneNumber();
 }
