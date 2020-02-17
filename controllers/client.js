@@ -58,30 +58,64 @@ module.exports = {
 
     // Push the client to a HL7 source
     push(req, res) {
-    ///////////////////CLIENT/////////////////////
-    patient = Client.findByPk(req.params.ClientId);
-        var client = hl7.Server.createTcpClient('localhost', 60920);
+        var patient = Client.findByPk(req.params.ClientId);
+        patient.then(function (patient) {
+            var patient_id = JSON.stringify(patient.id)
+            var client = hl7.Server.createTcpClient('localhost', 60920);
+            // create a message
+            var adt = new hl7.Message(
+                    "Manyara RRH",
+                    "AfyaCare EMR",
+                    "NHCR",
+                    "MOH",
+                    Date.now(),
+                    "",
+                    ["ADT", "A08", "ADT_A08"],
+                    "7",
+                    "P",
+                    "2.3.1",
+                );
+                adt.addSegment(
+                    "EVN",
+                    "",
+                    Math.floor(Date.now()),
+                );
+                adt.addSegment(
+                    "PID",
+                    "",
+                    "",
+                    [
+                        patient.id,
+                        "",
+                        "",
+                        "Manyara RRH Afyacare",
+                        "",
+                        "MRRH OPD",
+                        "",
+                        patient.lastname,
+                        patient.firstname,
+                        patient.middlename,
+                        "",
+                        "",
+                        "",
+                        "L",
+                    ],
+                    "",
+                    patient.date_of_birth,
 
-        //create a message
-        var msg = new hl7.Message(
-                            res.send(patient.id),
-                            "EPIC",
-                            "EPICADT",
-                            "SMS",
-                            "199912271408",
-                            "CHARRIS",
-                            ["ADT", "A04"], //This field has 2 components
-                            "1817457",
-                            "D",
-                            "2.5"
-                        );
-    console.log('******sending message*****')
-    client.send(msg, function(err, ack) {
-    console.log('******ack received*****')
-    console.log(ack.log());
-    });
-    ///////////////////CLIENT/////////////////////
-    // console.log(res.send(patient.id));
+                );
+
+                var parser = new hl7.Parser();
+
+                var msg = parser.parse(adt.toString());
+
+
+                console.log('******sending message******')
+                client.send(msg, function(err, ack) {
+                console.log('******ack received******')
+                console.log(ack.log());
+            })
+            })
     },
 
 };
