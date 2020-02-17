@@ -53,6 +53,12 @@ module.exports = {
             date_of_birth: {
                 type: Sequelize.STRING
             },
+            region: {
+                type: Sequelize.STRING
+            },
+            council: {
+                type: Sequelize.STRING
+            },
             ward: {
                 type: Sequelize.STRING
             },
@@ -62,10 +68,10 @@ module.exports = {
             hamlet: {
                 type: Sequelize.STRING
             },
-            phone_number: {
+            place_of_birth: {
                 type: Sequelize.STRING
             },
-            place_of_birth: {
+            phone_number: {
                 type: Sequelize.STRING
             },
             family_linkages: {
