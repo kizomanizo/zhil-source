@@ -84,6 +84,9 @@ block content
 
         p To send the client to the NHCR via HL7 press 'Push to NHCR'
         br
-        a(href="/clients/push/"+client.id type="button" class="btn btn-primary") Push to NHCR
+        if client.status==0
+            a(href="/clients/push/"+client.id type="button" class="btn btn-primary") Push to NHCR
+        else
+            a(href="/clients/push/"+client.id type="button" class="btn btn-danger disabled") Push to NHCR
         | 
         a(href="/clients" type="button" class="btn btn-secondary") Show All Clients

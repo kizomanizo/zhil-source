@@ -182,7 +182,10 @@ module.exports = {
                 console.log('******ack received******')
                 console.log(ack.log())
                 console.log(req.params.ClientId)
-                // patient.update({status: 1}, {where: {id: req.params.ClientId}})
+                console.log('******updating client status******')
+                Client.update({status: 1}, {where: {id: req.params.ClientId}})
+                console.log('******client status updated******')
+                client => res.render("client", {"client": patient})
             }
             )
         })
