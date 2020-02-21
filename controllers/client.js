@@ -181,6 +181,7 @@ module.exports = {
                 client.send(msg, function(err, ack) {
                 console.log('******ack received******')
                 console.log(ack.log())
+                console.log(req.params.ClientId)
                 // patient.update({status: 1}, {where: {id: req.params.ClientId}})
             }
             )
