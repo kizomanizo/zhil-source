@@ -24,17 +24,7 @@ module.exports = {
         }))
         .catch(error => res.status(400).send(error));
     },
- 
-    // Change client's status from beng inactive to being active
-    update(req, res) {
-        Client.update({status: 1}, {where: {id: req.params.ClientId}})
-        .then(client =>  res.status(200).send({
-            success: true,
-            message: "Status changed to ACTIVE",
-            entity: client,
-        }))
-        .catch(error => res.status(400).send(error));
-    },
+
 
     // Search for a specific client using UUID, for Primary key utumie findByPk(req.params.ClientId)
     details(req, res) {
@@ -44,25 +34,13 @@ module.exports = {
         .catch(error => res.status(400).send(error));
     },
 
-    // Delete a specific client using UUID, for Primary key utumie findByPk(req.params.ClientId)
-    delete(req, res) {
-      Client.findOne({where: {uuid: req.params.ClientUuid} })
-      .then(client => { return client.destroy()} )
-      .then(client =>  res.status(200).send({
-            success: true,
-            message: "Client deleted",
-            entity: client,
-    }))
-      .catch(error => res.status(400).send(error));
-    },
-
-    // Push the client to a HL7 source
+    // Push the message to a HL7 source
     push(req, res) {
-        var patient = Client.findByPk(req.params.ClientId);
-        patient.then(function (patient) {
-            var client = hl7.Server.createTcpClient('localhost', 60920);
+        var client = Client.findByPk(req.params.ClientId);
+        client.then(function (client) {
+            var message = hl7.Server.createTcpClient('localhost', 60920);
             // create a message
-            var adt = new hl7.Message(
+            var pid = new hl7.Message(
                     "Manyara RRH",
                     "AfyaCare EMR",
                     "NHCR",
@@ -74,70 +52,70 @@ module.exports = {
                     "P",
                     "2.3.1",
                 );
-                adt.addSegment(
+                pid.addSegment(
                     "EVN",
                     "",
                     Math.floor(Date.now()),
                 );
-                adt.addSegment(
+                pid.addSegment(
                     "PID",
                     "",
                     "",
                     [
-                        patient.ctc_id,
+                        client.ctc_id,
                         "",
                         "",
                         "Manyara RRH Afyacare",
                         "",
                         "MRRH OPD",
                         "",
-                        patient.lastname,
-                        patient.firstname,
-                        patient.middlename,
+                        client.lastname,
+                        client.firstname,
+                        client.middlename,
                         "",
                         "",
                         "",
                         "L",
                     ],
                     "",
-                    patient.date_of_birth,
-                    patient.sex,
+                    client.date_of_birth,
+                    client.sex,
                     [
                         "",
                         "",
                     ],
                     "",
                     [
-                        patient.hamlet,
-                        patient.council + "*" +patient.ward + "*" + patient.village,
-                        patient.council,
-                        patient.region,
+                        client.hamlet,
+                        client.council + "*" +client.ward + "*" + client.village,
+                        client.council,
+                        client.region,
                         "",
                         "",
-                        "H~" + patient.hamlet,
-                        patient.council + "*" +patient.ward + "*" + patient.village,
-                        patient.council,
-                        patient.region,
+                        "H~" + client.hamlet,
+                        client.council + "*" +client.ward + "*" + client.village,
+                        client.council,
+                        client.region,
                         "",
                         "",
-                        "C~" + patient.hamlet,
-                        patient.council + "*" +patient.ward + "*" + patient.village,
-                        patient.council,
-                        patient.region,
+                        "C~" + client.hamlet,
+                        client.council + "*" +client.ward + "*" + client.village,
+                        client.council,
+                        client.region,
                         "",
                         "",
                         "BR",
                     ],
                     "",
                     [
-                        "", "PRN", "", "PH", "", "", patient.phone, patient.phone,
+                        "", "PRN", "", "PH", "", "", client.phone, client.phone,
                     ],
                     "",
                     "",
                     "",
                     "",
-                    patient.unified_lifetime_number,
-                    patient.driver_license_id,
+                    client.unified_lifetime_number,
+                    client.driver_license_id,
                     "",
                     "",
                     "",
@@ -145,25 +123,25 @@ module.exports = {
                     "",
                     "",
                     "",
-                    patient.national_id,
+                    client.national_id,
                 );
-            adt.addSegment(
+            pid.addSegment(
                 "PV1",
                 "",
                 " ",
             );
-            adt.addSegment(
+            pid.addSegment(
                 "IN1",
                 "",
-                patient.nhif_id,
+                client.nhif_id,
                 "",
                 "NHIF",
             );
-            adt.addSegment(
+            pid.addSegment(
                 "ZXT",
-                patient.voter_id,
+                client.voter_id,
                 [
-                    patient.birth_certificate_entry_number,
+                    client.birth_certificate_entry_number,
                     "TZA",
                     "BTH_CRT",
                     "",
@@ -175,19 +153,21 @@ module.exports = {
 
                 var parser = new hl7.Parser();
 
-                var msg = parser.parse(adt.toString());
+                var msg = parser.parse(pid.toString());
 
                 console.log('******sending message******')
-                client.send(msg, function(err, ack) {
+                message.send(msg, function(err, ack) {
                 console.log('******ack received******')
                 console.log(ack.log())
                 console.log(req.params.ClientId)
                 console.log('******updating client status******')
-                Client.update({status: 1}, {where: {id: req.params.ClientId}})
-                console.log('******client status updated******')
-                client => res.render("client", {"client": patient})
-            }
-            )
+                var update = Client.update({status: 1}, {where: {id: req.params.ClientId}})
+                    .then(
+                        update => res.render("client", {"client": client}),
+                        console.log('******client status updated******')
+                        )
+                    }
+                    )              
         })
     },
 
@@ -198,7 +178,7 @@ module.exports = {
             patient.then(function (patient) {
                 var client = hl7.Server.createTcpClient('localhost', 60920);
                 // create a message
-                var adt = new hl7.Message(
+                var pid = new hl7.Message(
                         "Manyara RRH",
                         "AfyaCare EMR",
                         "NHCR",
