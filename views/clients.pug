@@ -3,7 +3,7 @@ extends layout
 block content
     div(class="container")
         h2 All the clients
-        p= pagesCount
+        a(href="/pushall") Push All
         div(class="row")
             div(class="col-lg")
             table(class="table")
@@ -33,7 +33,7 @@ block content
                             td= client.phone_number
                             td
                                 if client.status == 0
-                                    a(href='/clients/push/'+client.id) Push
+                                    a(href='/clients/push/'+client.id+'?page='+currentPage) Push
                                 else
                                     a(class="btn-link disabled" href='/client/details/'+client.id) Pushed
         div(class="row")

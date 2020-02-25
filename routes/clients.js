@@ -3,11 +3,12 @@ var router = express.Router();
 
 // Defining client controllers here
 const clientController = require('../controllers/client');
+const messageController = require('../controllers/message');
 
 // Client Routes
 router.get('/', clientController.all);
 router.get('/details/:ClientId', clientController.details);
-router.get('/push/:ClientId', clientController.push);
-router.get('/push/all', clientController.pushAll);
+router.get('/push/:ClientId', messageController.push);
+router.get('/pushall', messageController.pushAll);
 
 module.exports = router;
