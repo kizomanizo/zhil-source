@@ -1,5 +1,5 @@
 # HL7sender #
-===================
+=============
 
 A simple utility for testing sending of dummy data to a HL7 server
 
