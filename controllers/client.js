@@ -36,7 +36,7 @@ module.exports = {
     push(req, res) {
         var client = Client.findByPk(req.params.ClientId);
         client.then(function (client) {
-            var message = hl7.Server.createTcpClient('localhost', 60920);
+            var message = hl7.Server.createTcpClient('localhost', 60920);            
             // create a message
             var pid = new hl7.Message(
                     "Manyara RRH",
@@ -155,6 +155,7 @@ module.exports = {
 
                 console.log('******sending message******')
                 message.send(msg, function(err, ack) {
+                    console.log(msg)
                     console.log('******ack received******')
                     console.log(ack.log())
                     console.log('******updating client status******')

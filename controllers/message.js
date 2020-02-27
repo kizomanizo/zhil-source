@@ -3,11 +3,14 @@ const app = express();
 const Client = require('../models').Client;
 
 const net = require('net');
-const VT = String.fromCharCode(0x0b);
-const FS = String.fromCharCode(0x1c);
-const CR = String.fromCharCode(0x0d);
-const remoteOptions = {host: '127.0.0.1', port: 60920};
-// const message = `MSH|^~\\&|CHERDABEE||REDOX|RDX|20150915004731||ACK^S12|20150915004731|T|2.3|||||||||`;
+// const VT = String.fromCharCode(0x0b);
+// const FS = String.fromCharCode(0x1c);
+// const CR = String.fromCharCode(0x0d);
+// const remoteOptions = {host: '127.0.0.1', port: 60920};
+const VT = "\013";
+const FS = "\034";
+const CR = "\015";
+const remoteOptions = {host: '154.72.82.199', port: 2200};
 
 module.exports = {
     push(req, res) {
@@ -78,15 +81,15 @@ module.exports = {
             var CountryName = `Tanzania`;
 
             const message = 
-                MSHheader+p+SendingApplication+p+SendingFacility+p+ReceivingApplication+p+ReceivingFacility+p+MessageTimestamp+p+p+MSHsuffix+CR+
-                EVNheader+p+MessageTimestamp+CR+
-                PIDheader+p+p+p+NewProgramID+h+h+h+AuthApp+h+h+EncounterLoc+p+p+LName+h+FName+h+MName+h+h+h+h+`L`+p+p+DoB+p+Gender+p+p+p+p+
-                    PermHamlet+`/ `+h+PermCouncil+`*`+PermWard+`*`+PermVillage+h+PermDistrict+h+PermRegion+h+h+h+`H~`+
-                    ResdHamlet+`/ `+h+ResdCouncil+`*`+ResdWard+`*`+ResdVillage+h+ResdDistrict+h+ResdRegion+h+h+h+`C~`+
-                    BirthHamlet+`/ `+h+BirthCouncil+`*`+BirthWard+`*`+BirthVillage+h+BirthDistrict+h+BirthRegion+h+h+h+`BR||^PRN^PH^^^`+
-                    MobilePrefix+h+MobileSuffix+p+p+p+p+p+p+ULNumber+p+DLicense+p+p+p+p+p+p+p+p+NationalID+CR+
-                PVheader+p+p+p+CR+
-                INheader+p+p+InsuranceID+p+p+InsuranceType+CR+
+                MSHheader+p+SendingApplication+p+SendingFacility+p+ReceivingApplication+p+ReceivingFacility+p+MessageTimestamp+p+p+MSHsuffix+`\n`+
+                EVNheader+p+MessageTimestamp+`\n`+
+                PIDheader+p+p+p+NewProgramID+h+h+h+AuthApp+h+h+EncounterLoc+p+p+LName+h+FName+h+MName+h+h+h+h+`L`+p+p+DoB+p+Gender+p+p+p+p+`\n`+
+                    PermHamlet+`/ `+h+PermCouncil+`*`+PermWard+`*`+PermVillage+h+PermDistrict+h+PermRegion+h+h+h+`H~`+`\n`+
+                    ResdHamlet+`/ `+h+ResdCouncil+`*`+ResdWard+`*`+ResdVillage+h+ResdDistrict+h+ResdRegion+h+h+h+`C~`+`\n`+
+                    BirthHamlet+`/ `+h+BirthCouncil+`*`+BirthWard+`*`+BirthVillage+h+BirthDistrict+h+BirthRegion+h+h+h+`BR||^PRN^PH^^^`+`\n`+
+                    MobilePrefix+h+MobileSuffix+p+p+p+p+p+p+ULNumber+p+DLicense+p+p+p+p+p+p+p+p+NationalID+`\n`+
+                PVheader+p+p+p+`\n`+
+                INheader+p+p+InsuranceID+p+p+InsuranceType+`\n`+
                 Zheader+p+VotersID+BirthCert+CountryCode+h+`BTH_CRT`+h+h+CountryName+p+p+p
             ;
             const page = req.query.page || 1;
@@ -95,7 +98,7 @@ module.exports = {
             const remote = net.createConnection(remoteOptions, () => {
                 reqdata = VT + message + FS + CR
                 console.log(`${new Date()}`);
-                console.log('connected to HL7 server!');
+                console.log('Connected to HL7 server!');
                 console.log(reqdata);
                 remote.write(new Buffer.from(reqdata, encoding = "utf8"));
             });
@@ -105,14 +108,14 @@ module.exports = {
                 remote.end();
             });
             remote.on('error', (err) => {
-                var reqerror = `${new Date()} problem with request: ${err.message}`;
+                var reqerror = `${new Date()} Problem with request: ${err.message}`;
                 console.error(reqerror);
                 remote.end();
-                console.log(`${new Date()} disconnected from HL7 server`);
+                console.log(`${new Date()} Disconnected from HL7 server`);
             });
             remote.on('end', () => {
-                console.log(`${new Date()} disconnected from HL7 server`);
-                console.log('******updating client status******')
+                console.log(`${new Date()} Disconnected from HL7 server`);
+                console.log('******Updating client status******')
                 var patient = Client.update({status: 1}, {where: {id: req.params.ClientId}})
                     .then(
                         // Define the page that loads paginated answers
