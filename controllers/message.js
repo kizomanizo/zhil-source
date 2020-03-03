@@ -3,13 +3,9 @@ const app = express();
 const Client = require('../models').Client;
 
 const net = require('net');
-// const VT = String.fromCharCode(0x0b);
-// const FS = String.fromCharCode(0x1c);
-// const CR = String.fromCharCode(0x0d);
-// const remoteOptions = {host: '127.0.0.1', port: 60920};
-const VT = "\013";
-const FS = "\034";
-const CR = "\015";
+const VT = String.fromCharCode(0x0b);
+const FS = String.fromCharCode(0x1c);
+const CR = String.fromCharCode(0x0d);
 const remoteOptions = {host: '154.72.82.199', port: 2200};
 
 module.exports = {
@@ -17,30 +13,35 @@ module.exports = {
         var client = Client.findByPk(req.params.ClientId);
         client.then(function(client) {
             // MSH Variables
-            var p = `|`;
-            var h = `^`;
-            var n = `\n`
-            var MSHheader = `MSH|^~\\&`;
-            var SendingApplication = `AfyaCare`;
-            var SendingFacility = `manyara RRH`;
-            var ReceivingApplication = `NHCR`;
-            var ReceivingFacility = `MOH`;
-            var MessageTimestamp = Date.now();
-            var MSHsuffix = `ADT^A01^ADT_A01|4|P|2.3.1`;
+            var p = "|";
+            var h = "^";
+            var n = "\r\n"
+            var MSHheader = "MSH|^~\\&";
+            var SendingApplication = "CTC";
+            var SendingFacility = "HIM";
+            var ReceivingApplication = "NHCR";
+            var ReceivingFacility = "NHCR";
+            var Timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            var ColonTimestamp = Timestamp.replace(/-|\s/g,"")
+            var MessageTimestamp = ColonTimestamp.replace(/:/g,"");
+            var MSHsuffix = "ADT^A01^ADT_A01|8|P|2.3.1";
 
             // EVN Variables
-            var EVNheader = `EVN`;
+            var EVNheader = "EVN";
 
             // PID Variables
-            var PIDheader = `PID`;
-            var NewProgramID = `CTC2020120109098`;
-            var AuthApp = `CTC2`;
-            var EncounterLoc = `Dongobesh Health Center`;
+            var PIDheader = "PID";
+            var NewProgramID = client.ctc_id;
+            var AuthApp = "CTC";
+            var EncounterLoc = 100175;
             var LName = client.lastname;
             var FName = client.firstname;
             var MName = client.middlename;
-            var DoB = client.date_of_birth;
-            var Gender = client.sex;
+            var OName = client.othername;
+            var allDob = client.dob;
+            var colonDob = allDob.replace(/-|\s/g,"");
+            var DoB = colonDob.replace(/:/g,"").substr(0, 8);
+            var Gender = client.sex = 'Female' ? 'F' :'M';
             var PermHamlet = client.hamlet;
             var PermCouncil = client.council;
             var PermWard = client.ward;
@@ -59,47 +60,46 @@ module.exports = {
             var BirthVillage = client.village;
             var BirthDistrict = client.council;
             var BirthRegion = client.region;
-            var MobilePrefix = client.phone_number;
-            var MobileSuffix = client.phone_number;
-            var ULNumber = client.unified_lifetime_number;
-            var DLicense = client.driver_license_id;
+            var MobilePrefix = client.phone_prefix;
+            var MobileSuffix = client.phone_suffix;
+            var ULNumber = client.uln;
+            var DLicense = client.dl_id;
             var NationalID = client.national_id;
             
             // PV headers
-            var PVheader = `PV1`;
+            var PVheader = "PV1";
 
             // IN headers
-            var INheader = `IN1`;
-            var InsuranceID = ``;
-            var InsuranceType = `NHIF`;
+            var INheader = "IN1";
+            var InsuranceID = client.nhif_id;
+            var InsuranceType = "NHIF";
 
             // Z Headers
-            var Zheader = `ZXT`;
+            var Zheader = "ZXT";
             var VotersID = client.voter_id;
             var BirthCert = client.birth_certificate_entry_number;
-            var CountryCode = `TZA`;
-            var CountryName = `Tanzania`;
-
+            var CountryCode = "TZA";
+            var CountryName = "Tanzania";
+            
+            // Create the message to be sent to the NHCR
+            // +Zheader+p+VotersID+BirthCert+h+CountryCode+h+"BTH_CRT"+h+h+CountryName+p+p+p+"\r\n"
             const message = 
-                MSHheader+p+SendingApplication+p+SendingFacility+p+ReceivingApplication+p+ReceivingFacility+p+MessageTimestamp+p+p+MSHsuffix+`\n`+
-                EVNheader+p+MessageTimestamp+`\n`+
-                PIDheader+p+p+p+NewProgramID+h+h+h+AuthApp+h+h+EncounterLoc+p+p+LName+h+FName+h+MName+h+h+h+h+`L`+p+p+DoB+p+Gender+p+p+p+p+`\n`+
-                    PermHamlet+`/ `+h+PermCouncil+`*`+PermWard+`*`+PermVillage+h+PermDistrict+h+PermRegion+h+h+h+`H~`+`\n`+
-                    ResdHamlet+`/ `+h+ResdCouncil+`*`+ResdWard+`*`+ResdVillage+h+ResdDistrict+h+ResdRegion+h+h+h+`C~`+`\n`+
-                    BirthHamlet+`/ `+h+BirthCouncil+`*`+BirthWard+`*`+BirthVillage+h+BirthDistrict+h+BirthRegion+h+h+h+`BR||^PRN^PH^^^`+`\n`+
-                    MobilePrefix+h+MobileSuffix+p+p+p+p+p+p+ULNumber+p+DLicense+p+p+p+p+p+p+p+p+NationalID+`\n`+
-                PVheader+p+p+p+`\n`+
-                INheader+p+p+InsuranceID+p+p+InsuranceType+`\n`+
-                Zheader+p+VotersID+BirthCert+CountryCode+h+`BTH_CRT`+h+h+CountryName+p+p+p
+                MSHheader+p+SendingApplication+p+SendingFacility+p+ReceivingApplication+p+ReceivingFacility+p+MessageTimestamp+p+p+MSHsuffix+"\r\n"+
+                EVNheader+p+p+MessageTimestamp+"\r\n"+
+                PIDheader+p+p+p+NewProgramID+h+h+h+AuthApp+h+h+EncounterLoc+p+p+LName+h+FName+h+MName+h+h+h+h+"L"+p+p+DoB+p+Gender+p+h+OName+p+p+PermHamlet+h+PermCouncil+"*"+PermWard+"*"+PermVillage+h+PermDistrict+h+PermRegion+h+h+h+"H~"+ResdHamlet+h+ResdCouncil+"*"+ResdWard+"*"+ResdVillage+h+ResdDistrict+h+ResdRegion+h+h+h+"C~"+BirthHamlet+h+BirthCouncil+"*"+BirthWard+"*"+BirthVillage+h+BirthDistrict+h+BirthRegion+h+h+h+"BR||^PRN^PH^^^^"+MobilePrefix+MobileSuffix+p+p+p+p+p+p+ULNumber+p+DLicense+p+p+p+p+p+p+p+p+NationalID+"\r\n"+
+                PVheader+p+p+'I'+"\r\n"+
+                INheader+p+p+InsuranceID+p+p+InsuranceType+"\r\n"
             ;
+
+            // Send the client to NHCR using events
             const page = req.query.page || 1;
             const limit = 10;
             const offset = 10;
             const remote = net.createConnection(remoteOptions, () => {
-                reqdata = VT + message + FS + CR
+                reqdata = VT + message.replace(/ /g,"") + FS + CR
                 console.log(`${new Date()}`);
                 console.log('Connected to HL7 server!');
-                console.log(reqdata);
+                // console.log(reqdata);
                 remote.write(new Buffer.from(reqdata, encoding = "utf8"));
             });
             remote.on('data', (data) => {
@@ -117,7 +117,7 @@ module.exports = {
                 console.log(`${new Date()} Disconnected from HL7 server`);
                 console.log('******Updating client status******')
                 var patient = Client.update({status: 1}, {where: {id: req.params.ClientId}})
-                    .then(
+                    patient.then(
                         // Define the page that loads paginated answers
                         Client.findAndCountAll({
                             limit: limit,
@@ -135,11 +135,12 @@ module.exports = {
             })
         })
     },
+
     pushAll() {
         clients = Client.findAll({where: { status: 0 }})
         .then( client => {
             console.log(client.rows)
         })
-        // console.log('Here');
+        console.log('Here');
     },
 }

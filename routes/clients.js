@@ -9,7 +9,7 @@ const plainmessageController = require('../controllers/plainmessage');
 // Client Routes
 router.get('/', clientController.all);
 router.get('/details/:ClientId', clientController.details);
-router.get('/push/:ClientId', plainmessageController.push);
-router.get('/pushall', clientController.pushAll);
+router.get('/push/:ClientId', messageController.push);
+router.get('/pushall', messageController.pushAll);
 
 module.exports = router;

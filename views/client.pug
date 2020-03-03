@@ -39,7 +39,7 @@ block content
                     tbody
                             tr
                                 td ULN
-                                td= client.unified_lifetime_Number
+                                td= client.uln
                             tr
                                 td NIN
                                 td= client.national_id
@@ -51,10 +51,10 @@ block content
                                 td= client.ichf_id
                             tr
                                 td DL
-                                td= client.driver_license_id
+                                td= client.dl_id
                             tr
                                 td RITA
-                                td= client.birth_certificate_entry_number
+                                td= client.rita_id
             
             div(class="col-sm-4")
                 table(class="table")
@@ -65,7 +65,7 @@ block content
                     tbody
                             tr
                                 td Mobile
-                                td= client.phone_number
+                                td= '+255' + client.phone_prefix.substr(1,3) + client.phone_suffix
                             tr
                                 td CTC ID
                                 td= client.ctc_id

@@ -3,7 +3,7 @@ const faker = require('faker');
 module.exports = {
     up: (queryInterface, Sequelize) => {
         let records = [];
-        const record_limit = 123;
+        const record_limit = 50;
         let record_counter = 0;
         while (record_counter < record_limit) {
             records = [
@@ -11,27 +11,29 @@ module.exports = {
                     firstname: getClientFirstname(),
                     middlename: getClientMiddlename(),
                     lastname: getClientLastname(),
-                    unified_lifetime_number: getGovermentIds(),
-                    national_id: getGovermentIds(),
-                    voter_id: getGovermentIds(),
-                    driver_license_id: faker.random.alphaNumeric(10),
-                    nhif_id: getGovermentIds(),
-                    ichf_id: getGovermentIds(),
-                    birth_certificate_entry_number: getGovermentIds(),
-                    ctc_id: generateNthDitigNumber(10),
-                    tb_id: generateNthDitigNumber(10),
+                    othername: getClientOthername(),
+                    uln: getOtherIds(), 
+                    national_id: getNidaIds(),
+                    voter_id: getVoterIds(),
+                    dl_id: getDlNumber(),
+                    nhif_id: generateXDigitsNumber(12),
+                    ichf_id: getOtherIds(),
+                    rita_id: getOtherIds(),
+                    ctc_id: generateXDigitsNumber(10),
+                    tb_id: generateXDigitsNumber(10),
                     sex: record_counter % 2 === 0 ? "MALE" : "FEMALE",
-                    date_of_birth: faker.date.past(),
+                    dob: faker.date.past(),
                     region: getRegions(),
                     council: getCouncils(),
                     ward: getWards(),
                     village: getVillages(),
                     hamlet: getHamlets(),
                     place_of_birth: getBirthRegions(),
-                    phone_number: getRandomPhoneNumber(),
-                    family_linkages: faker.name.title(),
+                    phone_prefix: getRandomPhonePrefix(),
+                    phone_suffix: getRandomPhoneSuffix(),
+                    family_linkages: getClientFirstname() + " " + getClientLastname(),
                     other_linkages: faker.name.title(),
-                    place_encountered: faker.company.companyName(),
+                    place_encountered: faker.address.streetSuffix(),
                     createdAt: faker.date.recent(),
                     updatedAt: faker.date.future()
                 }
@@ -52,8 +54,19 @@ module.exports = {
     }
 };
 
-function getGovermentIds() {
-    return "T-" + generateNthDitigNumber(4) + "-" + generateNthDitigNumber(4) + "-" + generateNthDitigNumber(3) + "-" + generateNthDitigNumber(1)
+function getNidaIds() {
+    return generateXDigitsNumber(8) + "-" + generateXDigitsNumber(5) + "-" + generateXDigitsNumber(5) + "-" + generateXDigitsNumber(2)
+}
+function getVoterIds() {
+    return "T-" + generateXDigitsNumber(4) + "-" + generateXDigitsNumber(4) + "-" + generateXDigitsNumber(3) + "-" + generateXDigitsNumber(1)
+}
+
+function getOtherIds() {
+    return generateXDigitsNumber(6) + "-" + generateXDigitsNumber(4)
+}
+
+function getDlNumber() {
+    return 400 + generateXDigitsNumber(7)
 }
 
 function getClientFirstname() {
@@ -69,18 +82,27 @@ function getClientMiddlename() {
     const middleNames = [
         'Mawazo', 'Juma', 'Ali', 'John', 'Joseph', 'Sauli', 'Amon',
         'Ahmed', 'Abdallah', 'Patrick', 'Sosthenes', 'Marko', 'Peter',
-        'Baraka', 'Neema', 'Kheri', 'Mfugale', 'Rashid',
+        'Baraka', 'Musa', 'Kheri', 'Mfugale',
     ];
     return  middleNames[getRandomIndex(middleNames.length -1)];
 }
 
 function getClientLastname() {
     const lastNames = [
-        'Chale', 'Ally', 'Iddi', 'Mangushi', 'Mabusi', 'Bagumhe', 'Mushi', 'Chizi', 'Juha',
+        'Chale', 'Ally', 'Iddi', 'Managwatay', 'Mabusi', 'Bagumhe', 'Tlatla', 'Quang', 'Boya',
         'Juma', 'Alfayo', 'Slaa', 'Tluway', 'Boay', 'Slegeray', 'Kulle', 'Maleyeck',
         'Fisoo', 'Sulle', 'Burra', 'Baha', 'Matle', 'Kizito',
     ];
     return lastNames[getRandomIndex(lastNames.length -1)];
+}
+
+function getClientOthername() {
+    const otherNames = [
+        'Papaa', 'Faru', 'Chalii', 'Oyaoya', 'Amsha', 'Mishe', 'Bumunda', 'Maprosoo', 'Kisu', 'Mangi', 'Chief',
+        'Samatta', 'Drogba', 'Mkali', 'Ticha', 'Bob', 'Ras', 'Dogo', 'Kadogoo',
+        'Fundi', 'P-Funk', 'Majani', 'Kijiti', 'Mafegi', 'Janjaro',
+    ];
+    return otherNames[getRandomIndex(otherNames.length -1)];
 }
 
 function getBirthRegions() {
@@ -141,7 +163,7 @@ function getVillages() {
     return villages[getRandomIndex(villages.length -1)];
 }
 
-function getRandomPhoneNumber() {
+function getRandomPhonePrefix() {
     const prefixes = [
         '0654',
         '0754',
@@ -151,10 +173,13 @@ function getRandomPhoneNumber() {
         '0653',
         '0755',
     ];
-    return prefixes[getRandomIndex(prefixes.length -1)] !== 'undefined' ?
-        prefixes[getRandomIndex(prefixes.length -1)] + " " + generateNthDitigNumber(3) + " " + generateNthDitigNumber(3)
-        :
-        getRandomPhoneNumber();
+    return prefixes[getRandomIndex(prefixes.length -1)] !== 'undefined' ? prefixes[getRandomIndex(prefixes.length -1)]
+    : 
+    getRandomPhonePrefix();
+}
+
+function getRandomPhoneSuffix() {
+    return generateXDigitsNumber(6) !== 'undefined' ? generateXDigitsNumber(6) : getRandomPhoneSuffix()
 }
 
 function getRandomIndex(maximunLimit) {
@@ -162,15 +187,13 @@ function getRandomIndex(maximunLimit) {
 }
 
 
-function generateNthDitigNumber(digits) {
+function generateXDigitsNumber(digits) {
     let add = 1, max = 12 - add;
-
     if (digits > max) {
-        return generateNthDitigNumber(max) + generateNthDitigNumber(digits - max);
+        return generateXDigitsNumber(max) + generateXDigitsNumber(digits - max);
     }
     max = Math.pow(10, digits + add);
     let min = max / 10; // Math.pow(10, n) basically
     let number = Math.floor(Math.random() * (max - min + 1)) + min;
-
     return ("" + number).substring(add);
 }

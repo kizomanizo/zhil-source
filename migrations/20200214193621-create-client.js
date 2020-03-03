@@ -20,7 +20,11 @@ module.exports = {
                 type: Sequelize.STRING,
                 defaultValue: "Baraka",
             },
-            unified_lifetime_number: {
+            othername: {
+                type: Sequelize.STRING,
+                defaultValue: "Papaa",
+            },
+            uln: {
                 type: Sequelize.STRING
             },
             national_id: {
@@ -29,7 +33,7 @@ module.exports = {
             voter_id: {
                 type: Sequelize.STRING
             },
-            driver_license_id: {
+            dl_id: {
                 type: Sequelize.STRING
             },
             nhif_id: {
@@ -38,11 +42,11 @@ module.exports = {
             ichf_id: {
                 type: Sequelize.STRING
             },
-            birth_certificate_entry_number: {
+            rita_id: {
                 type: Sequelize.STRING
             },
             ctc_id: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             tb_id: {
                 type: Sequelize.STRING
@@ -50,7 +54,7 @@ module.exports = {
             sex: {
                 type: Sequelize.STRING
             },
-            date_of_birth: {
+            dob: {
                 type: Sequelize.STRING
             },
             region: {
@@ -71,7 +75,10 @@ module.exports = {
             place_of_birth: {
                 type: Sequelize.STRING
             },
-            phone_number: {
+            phone_prefix: {
+                type: Sequelize.STRING
+            },
+            phone_suffix: {
                 type: Sequelize.STRING
             },
             family_linkages: {
