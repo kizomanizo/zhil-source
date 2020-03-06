@@ -16,8 +16,8 @@ block content
                         th(scope="col") Region
                         th(scope="col") Council
                         th(scope="col") Ward
-                        th(scope="col") Status
                         th(scope="col") Phone Number
+                        th(scope="col") Edit
                         th(scope="col") View
                 tbody
                     each client in clients
@@ -29,17 +29,14 @@ block content
                             td= client.region
                             td= client.council
                             td= client.ward
-                            td
-                                if client.status == 1
-                                    span Pushed
-                                else
-                                    span Local
                             td= client.phone_prefix + client.phone_suffix
                             td
+                                a(href="/clients/edit/"+client.uuid) Edit
+                            td
                                 if client.status == 0
-                                    a(href='/clients/details/'+client.id+'?page='+currentPage) More
+                                    a(href='/clients/push/'+client.uuid+'?page='+currentPage) Push
                                 else
-                                    a(class="btn-link disabled" href='/client/details/'+client.id) More
+                                    a(class="btn-link disabled" href='/clients/push/'+client.uuid) Pushed
         div(class="row")
             block content
                 .row

@@ -6,7 +6,8 @@ const net = require('net');
 const VT = String.fromCharCode(0x0b);
 const FS = String.fromCharCode(0x1c);
 const CR = String.fromCharCode(0x0d);
-const remoteOptions = {host: '154.72.82.199', port: 2200};
+// const remoteOptions = {host: '154.72.82.199', port: 2200};
+const remoteOptions = {host: '127.0.0.1', port: 60920};
 
 module.exports = {
     push(req, res) {
@@ -92,7 +93,7 @@ module.exports = {
             ;
 
             // Send the client to NHCR using events
-            const page = req.query.page || 1;
+            const page = req.query.page || 2;
             const limit = 10;
             const offset = 10;
             const remote = net.createConnection(remoteOptions, () => {
@@ -125,14 +126,9 @@ module.exports = {
                             order: [['id', 'ASC']],
                             // where: { status: 0 },
                         })
-                        .then(clients => res.status(302).render('clients', {
-                            "clients": clients.rows,
-                            "pagesCount": Math.ceil(clients.count/limit),
-                            "currentPage": page,
-                        }))
-                        .catch(error => res.status(400).send(error)),
-                        )
-            })
+                        .then(res.redirect('/clients?page='+page))
+                    )
+                })
         })
     },
 

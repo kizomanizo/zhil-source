@@ -8,6 +8,7 @@ module.exports = {
         while (record_counter < record_limit) {
             records = [
                 ...records, {
+                    uuid: getUuid(),
                     firstname: getClientFirstname(),
                     middlename: getClientMiddlename(),
                     lastname: getClientLastname(),
@@ -53,6 +54,10 @@ module.exports = {
         return queryInterface.bulkDelete('Clients', null, {});
     }
 };
+
+function getUuid() {
+    return faker.random.uuid() !== 'undefined' ? faker.random.uuid() : getUuid()
+}
 
 function getNidaIds() {
     return generateXDigitsNumber(8) + "-" + generateXDigitsNumber(5) + "-" + generateXDigitsNumber(5) + "-" + generateXDigitsNumber(2)
