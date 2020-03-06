@@ -2,68 +2,71 @@ extends layout
 block content
     div(class="container")
         h2= client.firstname +" "+client.middlename+" "+client.lastname
-        form(action="/clients/edit/"+client.uuid method="post" id="editClient" enctype="application/x-www-form-urlencoded")
+        form(action="/clients/edit/"+client.uuid method="POST" id="editClient" name="editClient" enctype="application/x-www-form-urlencoded")
             div(class="form-row")
                 div(class="form-group col-md-3")
                     label(for="firstname") First Name
-                    input(type="text" class="form-control" id="firstname" placeholder="firstname" value=client.firstname)
+                    input(type="text" class="form-control" id="firstname" name="firstname" value=client.firstname)
                 div(class="form-group col-md-3")
                     label(for="middlename") Middle Name
-                    input(type="text" class="form-control" id="middlename" placeholder="middlename" value=client.middlename)
+                    input(type="text" class="form-control" id="middlename" name="middlename" value=client.middlename)
                 div(class="form-group col-md-3")
                     label(for="lastname") Last Name
-                    input(type="text" class="form-control" id="lastname" placeholder="lastname" value=client.lastname)
+                    input(type="text" class="form-control" id="lastname" name="lastname" value=client.lastname)
                 div(class="form-group col-md-3")
                     label(for="othername") Other Name
-                    input(type="text" class="form-control" id="othername" placeholder="othername" value=client.othername)
+                    input(type="text" class="form-control" id="othername" name="othername" value=client.othername)
             div(class="form-row")
                 div(class="form-group col-md-3")
                     label(for="sex") Sex
-                    select(id="inputState" class="form-control")
+                    select(id="sex" name="sex" class="form-control")
                         option(selected)= client.sex
                         option(value="male") Male
                         option(value="female") Female
                 div(class="form-group col-md-3")
                     label(for="dob") DoB
-                    input(type="text" class="form-control" id="dob" placeholder="dob" value=client.dob)
+                    input(type="text" class="form-control" id="dob" name="dob" value=client.dob)
                 div(class="form-group col-md-3")
                     label(for="phone_prefix") Phone Prefix
-                    input(type="text" class="form-control" id="phone_prefix" placeholder="tb_id" value=client.phone_prefix)
+                    input(type="text" class="form-control" id="phone_prefix" name="phone_prefix" value=client.phone_prefix)
                 div(class="form-group col-md-3")
                     label(for="phone_suffix") Phone Suffix
-                    input(type="text" class="form-control" id="phone_suffix" placeholder="phone_suffix" value=client.phone_suffix)
+                    input(type="text" class="form-control" id="phone_suffix" name="phone_suffix" value=client.phone_suffix)
             hr
             div(class="form-row")
                 div(class="form-group col-md-4")
                     label(for="uln") ULN
-                    input(type="text" class="form-control" id="uln" placeholder="uln" value=client.uln)
+                    input(type="text" class="form-control" id="uln" name="uln" value=client.uln)
                 div(class="form-group col-md-4")
                     label(for="national_id") National ID
-                    input(type="text" class="form-control" id="national_id" placeholder="national_id" value=client.national_id)
+                    input(type="text" class="form-control" id="national_id" name="national_id" value=client.national_id)
                 div(class="form-group col-md-4")
-                    label(for="votter_id") Votter ID
-                    input(type="text" class="form-control" id="votter_id" placeholder="votter_id" value=client.votter_id)
+                    label(for="voter_id") Voter ID
+                    input(type="text" class="form-control" id="voter_id" name="voter_id" value=client.voter_id)
             div(class="form-row")
                 div(class="form-group col-md-4")
                     label(for="dl_id") Driver's License
-                    input(type="text" class="form-control" id="dl_id" placeholder="dl_id" value=client.dl_id)
+                    input(type="text" class="form-control" id="dl_id" name="dl_id" value=client.dl_id)
                 div(class="form-group col-md-4")
                     label(for="nhif_id") NHIF ID
-                    input(type="text" class="form-control" id="nhif_id" placeholder="nhif_id" value=client.nhif_id)
+                    input(type="text" class="form-control" id="nhif_id" name="nhif_id" value=client.nhif_id)
                 div(class="form-group col-md-4")
                     label(for="ichf_id") ICHF ID
-                    input(type="text" class="form-control" id="ichf_id" placeholder="ichf_id" value=client.ichf_id)
+                    input(type="text" class="form-control" id="ichf_id" name="ichf_id" value=client.ichf_id)
             div(class="form-row")
                 div(class="form-group col-md-4")
                     label(for="rita_id") Rita ID
-                    input(type="text" class="form-control" id="rita_id" placeholder="rita_id" value=client.rita_id)
+                    input(type="text" class="form-control" id="rita_id" name="rita_id" value=client.rita_id)
                 div(class="form-group col-md-4")
                     label(for="ctc_id") CTC ID
-                    input(type="text" class="form-control" id="ctc_id" placeholder="ctc_id" value=client.ctc_id)
+                    input(type="text" class="form-control" id="ctc_id" name="ctc_id" value=client.ctc_id)
                 div(class="form-group col-md-4")
-                    label(for="tb_id") TB ID
-                    input(type="text" class="form-control" id="tb_id" placeholder="tb_id" value=client.tb_id)
+                    label(for="tbid") TB ID
+                    input(type="text" class="form-control" id="tbid" name="tbid" value=client.tb_id)
             hr
             div(clas="form-row")
-                div(class="form-group col-md-3")
+                div(class="form-group col-md-4")
                     button(type="submit" class="btn btn-primary" form="editClient") Update Details
+                    |
+                    |
+                    a(href="/clients" type="button" class="btn btn-secondary") Show All Clients

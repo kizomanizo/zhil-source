@@ -39,32 +39,31 @@ module.exports = {
     },
 
     update(req, res, next) {
+        console.log(req.body)
         Client.update(
             {
                 firstname: req.body.firstname,
                 middlename: req.body.middlename,
                 lastname: req.body.lastname,
                 othername: req.body.othername,
+                uln: req.body.uln,
+                national_id: req.body.national_id,
+                voter_id: req.body.voter_id,
+                dl_id: req.body.dl_id,
+                nhif_id: req.body.nhif_id,
+                ichf_id: req.body.ichf_id,
+                rita_id: req.body.rita_id,
+                ctc_id: req.body.ctc_id,
+                tb_id: req.body.tbid,
+                sex: req.body.sex,
+                dob: req.body.dob,
+                phone_prefix: req.body.phone_prefix,
+                phone_suffix: req.body.phone_suffix,
             },
             {returning: true, where: {uuid: req.params.ClientUuid} }
             
-          )
-          .then(function(rowsUpdated) {
-            console.log(req.params.ClientUuid)
-            // res.json(rowsUpdated)
-          })
-          .catch(next)
-
-
-        //   const client = await Client.findOne({where: {uuid: req.params.ClientUuid}});
-        //     if (!client) {
-        //             throw Error(`Client not updated. uuid: ${uuid}`);
-        //         }
-
-        //         client.firstname = input.firstname;
-        //         client.middlename = input.middlename;
-        //         client.lastname = input.lastname;
-        //         client.othername = input.othername;
-        //         await client.save();
+            )
+            .then(res.redirect('back'))
+            .catch(next)
     },
 };
