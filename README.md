@@ -12,7 +12,7 @@ To run the application follow the following steps.
 5. Create the database using `npx sequelize-cli db:create` then run `npx sequelize-cli db:migrate` to create tables
 6. Populate the database with dummy data using `npx sequelize-cli db:seed:all` if you want to change the number of demo clients that get populated in your database then go to the cloned files inside 'seeder' directory and change the line that reads: ```const record_limit = 50;``` Change the number 50 to any number you prefer (it can take a while to seed 100,000 rows).
 7. Start the application using `npx nodemon start`
-8. OPTIONAL: To change DB environments got to app.js change the line that reads `res.locals.error = req.app.get('env') === 'development' ? err : {};` change the word 'development' to 'production' or 'test'.
+8. OPTIONAL: To change DB environments got to bin/www change the line that reads `process.env.NODE_ENV = 'development';` change the word 'development' to 'production' or 'test'.
 
 
 ### Post-install use ###
