@@ -243,6 +243,7 @@ module.exports = {
                     var patient = Client.update({status: 1}, {where: {uuid: client.uuid}})
                     })                   
             })
+            // @TODO Move this THEN to a relevant location in the document
             .then(res.redirect('/clients?page='+page))
         })
         console.log('Here');

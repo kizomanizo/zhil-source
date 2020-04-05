@@ -94,7 +94,7 @@ function getClientMiddlename() {
 
 function getClientLastname() {
     const lastNames = [
-        'Chale', 'Ally', 'Iddi', 'Managwatay', 'Mabusi', 'Bagumhe', 'Tlatla', 'Quang', 'Boya',
+        'Chale', 'Ally', 'Iddi', 'Maangwatay', 'Mabusi', 'Bagumhe', 'Tlatla', 'Quang', 'Boya',
         'Juma', 'Alfayo', 'Slaa', 'Tluway', 'Boay', 'Slegeray', 'Kulle', 'Maleyeck',
         'Fisoo', 'Sulle', 'Burra', 'Baha', 'Matle', 'Kizito',
     ];
