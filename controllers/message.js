@@ -6,12 +6,12 @@ const net = require('net');
 const VT = String.fromCharCode(0x0b);
 const FS = String.fromCharCode(0x1c);
 const CR = String.fromCharCode(0x0d);
-const remoteOptions = {host: '154.72.82.199', port: 2200};
-// const remoteOptions = {host: '127.0.0.1', port: 60920};
+// const remoteOptions = {host: '154.72.82.199', port: 2200};
+const remoteOptions = {host: '127.0.0.1', port: 60920};
 
 module.exports = {
     push(req, res) {
-        var client = Client.findOne({where: {uuid: req.params.ClientUuid} });
+        var client = Client.findOne({where: {uuid: req.params.ClientUuid}, logging: false });
         client.then(function(client) {
             // MSH Variables
             var p = "|";
@@ -114,16 +114,17 @@ module.exports = {
                 remote.end();
                 console.log(`${new Date()} Disconnected from HL7 server`);
             });
-            remote.on('end', () => {
+            remote.on('end', async () => {
                 console.log(`${new Date()} Disconnected from HL7 server`);
                 console.log('******Updating client status******')
-                var patient = Client.update({status: 1}, {where: {id: req.params.ClientId}})
-                    patient.then(
+                await Client.update({status: 1}, {where: {uuid: req.params.ClientUuid}, logging: false})
+                    .then(
                         // Define the page that loads paginated answers
                         Client.findAndCountAll({
                             limit: limit,
                             offset: (page - 1) * offset,
                             order: [['id', 'ASC']],
+                            logging: false
                             // where: { status: 0 },
                         })
                         .then(res.redirect('/clients?page='+page))
@@ -237,11 +238,11 @@ module.exports = {
                     remote.end();
                     console.log(`${new Date()} Disconnected from HL7 server`);
                 });
-                remote.on('end', () => {
+                remote.on('end', ()  => {
                     console.log(`${new Date()} Disconnected from HL7 server`);
-                    console.log('******Updating client status******')
+                    console.log('******Updating client status******');
                     var patient = Client.update({status: 1}, {where: {uuid: client.uuid}})
-                    })                   
+                });                 
             })
             // @TODO Move this THEN to a relevant location in the document
             .then(res.redirect('/clients?page='+page))
