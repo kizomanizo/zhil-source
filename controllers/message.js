@@ -6,8 +6,9 @@ const net = require('net');
 const VT = String.fromCharCode(0x0b);
 const FS = String.fromCharCode(0x1c);
 const CR = String.fromCharCode(0x0d);
-const remoteOptions = {host: '154.72.82.199', port: 2200};
-// const remoteOptions = {host: '127.0.0.1', port: 60920};
+// const remoteOptions = {host: '154.72.82.199', port: 2200};
+const remoteOptions = {host: '127.0.0.1', port: 60920};
+var client = require('./client');
 
 module.exports = {
     push(req, res) {
@@ -199,15 +200,8 @@ module.exports = {
                 var InsuranceID = client.nhif_id;
                 var InsuranceType = "NHIF";
 
-                // Z Headers
-                var Zheader = "ZXT";
-                var VotersID = client.voter_id;
-                var BirthCert = client.birth_certificate_entry_number;
-                var CountryCode = "TZA";
-                var CountryName = "Tanzania";
                 
                 // Create the message to be sent to the NHCR
-                // +Zheader+p+VotersID+BirthCert+h+CountryCode+h+"BTH_CRT"+h+h+CountryName+p+p+p+"\r\n"
                 const message = 
                     MSHheader+p+SendingApplication+p+SendingFacility+p+ReceivingApplication+p+ReceivingFacility+p+MessageTimestamp+p+p+MSHsuffix+"\r\n"+
                     EVNheader+p+p+MessageTimestamp+"\r\n"+
@@ -217,14 +211,10 @@ module.exports = {
                 ;
 
                 // Send the client to NHCR using events
-                var page = req.query.page || 2;
-                var limit = 10;
-                var offset = 10;
                 var remote = net.createConnection(remoteOptions, () => {
                     reqdata = VT + message.replace(/ /g,"") + FS + CR
                     console.log(`${new Date()}`);
                     console.log('Connected to HL7 server!');
-                    // console.log(reqdata);
                     remote.write(new Buffer.from(reqdata, encoding = "utf8"));
                 });
                 remote.on('data', (data) => {
@@ -238,14 +228,15 @@ module.exports = {
                     remote.end();
                     console.log(`${new Date()} Disconnected from HL7 server`);
                 });
-                remote.on('end', ()  => {
+                remote.on('end', async ()  => {
                     console.log(`${new Date()} Disconnected from HL7 server`);
                     console.log('******Updating client status******');
-                    var patient = Client.update({status: 1}, {where: {uuid: client.uuid}})
+                    await Client.update({status: 1}, {where: {uuid: client.uuid}})
                 });                 
             })
             // @TODO Move this THEN to a relevant location in the document
-            .then(res.redirect('/clients?page='+page))
+            .then(client.all())
+            // .then(res.redirect('/clients?page='+page))
         })
         console.log('Here');
     },
