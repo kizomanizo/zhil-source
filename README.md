@@ -1,5 +1,5 @@
 # HL7sender #
-=============
+__________________
 
 A simple utility for generating and sending of dummy patient data to a HL7 server. The data is meant for consumption by a client registry server that can handle HL7 data (MSH, EVN, PID, PV1, IN1 and optional ZXT Column for non-standard data).
 
