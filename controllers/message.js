@@ -6,8 +6,8 @@ const net = require('net');
 const VT = String.fromCharCode(0x0b);
 const FS = String.fromCharCode(0x1c);
 const CR = String.fromCharCode(0x0d);
-const remoteOptions = {host: '154.72.82.199', port: 2200};
-// const remoteOptions = {host: '127.0.0.1', port: 60920};
+// const remoteOptions = {host: '154.72.82.199', port: 2200};
+const remoteOptions = {host: '127.0.0.1', port: 60920};
 var client = require('./client');
 
 module.exports = {
@@ -101,7 +101,7 @@ module.exports = {
                 reqdata = VT + message.replace(/ /g,"") + FS + CR
                 console.log(`${new Date()}`);
                 console.log('Connected to HL7 server!');
-                // console.log(reqdata);
+                console.log(reqdata);
                 remote.write(new Buffer.from(reqdata, encoding = "utf8"));
             });
             remote.on('data', (data) => {

@@ -1,0 +1,13 @@
+MSH|^~\&|<SendingApplication>|<SendingFacility>|<Receiving Application>|<Receiving Facility>|<Message Timestamp>||ADT^A01^ADT_A01|4|P|2.3.1
+EVN||<Message Timestamp>
+PID|||<NewProgramID>^^^<AuthorizationApplication>^^<EncounterLocation>||<LastNa
+me>^<FirstName>^<MiddleName>^^^^L||<DateofBirth>|<Gender>|^<OtherName>||
+<PermanentHamlet/Road>^<PermanentCouncil>*<PermanentWard>*<PermanentVillage>^
+<PermanentDistrict>^<PermanentRegion>^^^H~<ResidentialHamlet/Road>^<ResidentialCo
+uncil>*<ResidentialWard>*<ResidentialVillage>^<ResidentialDistrict>^<ResidentialRegion>^^
+^C~<BirthHamlet/Road>^<BirthCouncil>*<BirthWard>*<BirthVillage>^<BirthDistrict>^<BirthReg
+ion>^^^BR||^PRN^PH^^^<MobilePrefix>^<MobileSuffix>||||||<ULN>|<DriversID>||||||
+||<NationalID>
+PV1||I
+IN1||<InsuranceID>||<InsuranceType>
+ZXT|<VotersID>|<BirthCert>^<CountryCode>^BTH_CRT^^<CountryName>|||`

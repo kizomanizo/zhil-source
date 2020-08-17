@@ -1,23 +1,23 @@
 {
     "development": {
-      "username": "root",
-      "password": "Mysql2020!",
+      "username": "mysqluser",
+      "password": "MysqlClient2020!",
       "database": "nhcr_dev",
       "host": "127.0.0.1",
       "dialect": "mysql",
       "operatorsAliases": 0
     },
     "test": {
-      "username": "root",
-      "password": "Mysql2020!",
+      "username": "mysqluser",
+      "password": "MysqlClient2020!",
       "database": "nhcr_test",
       "host": "127.0.0.1",
       "dialect": "mysql",
       "operatorsAliases": 0
     },
     "production": {
-      "username": "root",
-      "password": "Mysql2020!",
+      "username": "mysqluser",
+      "password": "MysqlClient2020!",
       "database": "nhcr_prod",
       "host": "127.0.0.1",
       "dialect": "mysql",
