@@ -1,9 +1,11 @@
 'use strict';
 const faker = require('faker');
+require('dotenv').config();
+
 module.exports = {
     up: (queryInterface, Sequelize) => {
         let records = [];
-        const record_limit = 200;
+        const record_limit = process.env.NUMBER_OF_CLIENTS || 10;
         let record_counter = 0;
         while (record_counter < record_limit) {
             records = [

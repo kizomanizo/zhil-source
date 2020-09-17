@@ -3,7 +3,11 @@ extends layout
 block content
     div(class="container")
         h2 All the clients
-        a(href="/clients/pushall") Push All
+        div(class="row")
+            a(href='/clients/pushall') Push All Clients 
+            |
+            | | 
+            a(href='/clients') Reload
         div(class="row")
             div(class="col-lg")
             table(class="table")
@@ -50,7 +54,12 @@ block content
                             - var i = 1;
                                 while i <= pagesCount
                                     li.page-item
-                                        a.page-link(href=`?page=${i+10}`)= i++
+                                        a.page-link(href=`?page=${i}`)= i++
+                        if pagesCount >= 10
+                            - var i = 10;
+                                while i <= pagesCount
+                                    li.page-item
+                                        a.page-link(href=`?page=${i}`)= i++
                         else
                             -var i = currentPage - 3
                             while i >= 1 && i <= currentPage
@@ -60,3 +69,5 @@ block content
                         if currentPage < pagesCount
                             li.page-item
                                 a.page-link(href=`?page=${parseInt(currentPage) + 1}`) Next
+        div(class="row")
+            a(href='/clients/seed' class="text-right badge badge-danger") Regenerate Clients
