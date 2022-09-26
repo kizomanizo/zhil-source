@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"rest-client.fontSize": 10,
+		"workbench.colorTheme": "Palenight Operator"
+	}
+}

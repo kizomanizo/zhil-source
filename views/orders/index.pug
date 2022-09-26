@@ -1,0 +1,32 @@
+extends layout
+
+block content
+    div(class="container")
+        h2(class="mt-5") All the orders
+        div(class="row mt-3 pl-2")
+            a(type="button" class="btn btn-secondary" href='/orders') Reload Orders
+        div(class="row mt-3")
+            div(class="col-lg")
+            table(class="table")
+                thead
+                    tr
+                        th(scope="col") Order ID
+                        th(scope="col") Order Date
+                        th(scope="col") Order Status
+                        th(scope="col") View
+                tbody
+                    each order in rows
+                        tr
+                            th(scope="row")= order.id
+                            td= order.order_date
+                            td
+                                if order.status == 0
+                                    p(class="text") Not Submited
+                                else
+                                    p(class="text-muted") Submitted
+                            td
+                                a(class="btn btn-link" href="/orders/"+order.id) View
+
+            
+        div(class="row mt-2")
+            a(class="btn btn-link" href="/orders/add") Add Orders

@@ -5,7 +5,8 @@
       "database": "nhcr_dev",
       "host": "127.0.0.1",
       "dialect": "mysql",
-      "operatorsAliases": 0
+      "operatorsAliases": 0,
+      "logging": false
     },
     "test": {
       "username": "mysqluser",
@@ -13,7 +14,8 @@
       "database": "nhcr_test",
       "host": "127.0.0.1",
       "dialect": "mysql",
-      "operatorsAliases": 0
+      "operatorsAliases": 0,
+      "logging": false
     },
     "production": {
       "username": "mysqluser",
@@ -21,6 +23,7 @@
       "database": "nhcr_prod",
       "host": "127.0.0.1",
       "dialect": "mysql",
-      "operatorsAliases": 0
+      "operatorsAliases": 0,
+      "logging": false
     }
   }

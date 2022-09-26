@@ -1,0 +1,79 @@
+# Variables
+@baseUrl = http://localhost:4005/api/v1
+@int = {{$randomInt 1000 9999}}
+@authToken = {{login.response.body.message}}
+@addeduserId = {{create.response.body.message.id}}
+
+### Get all users
+GET {{baseUrl}}/users/ HTTP/1.1
+Authorization: {{authToken}}
+
+### Add a user
+# @name create
+POST {{baseUrl}}/users/ HTTP/1.1
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "firstname": "John",
+    "lastname": "Doe",
+    "mobilephone": "0791123456",
+    "username": "{{int}}Member",
+    "password": "{{int}}",
+    "email": "{{int}}@example.com",
+    "level_id": "{{levels.response.body.message[0].id}}",
+    "status": true
+}
+
+### Find a specific user
+GET {{baseUrl}}/users/{{addeduserId}}
+Authorization: {{authToken}}
+
+### Update a specific user
+PATCH {{baseUrl}}/users/{{addeduserId}} HTTP/1.1
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "status": false,
+    "firstname": "Changed again"
+}
+
+### Delete a user
+DELETE {{baseUrl}}/users/{{addeduserId}}
+Authorization: {{authToken}}
+
+### Delete specific
+DELETE {{baseUrl}}/users/e172f1ab-e256-4cc5-95c9-1ae0f99b1715
+Authorization: {{authToken}}
+
+### Get all levels
+# @name levels
+GET {{baseUrl}}/levels HTTP/1.1
+Content-Type: application/json
+Authorization: {{authToken}}
+
+### Get a specific level
+GET {{baseUrl}}/levels/{{levels.response.body.message[0].id}} HTTP/1.1
+Authorization: {{authToken}}
+
+### Post login credentials to get a token
+ # @name login
+POST {{baseUrl}}/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "Administrator",
+    "password": "{{$dotenv DEMO_PASSWORD}}"
+}
+
+### Pull my details
+ # @name me
+GET {{baseUrl}}/users/me/details HTTP/1.1
+Authorization: {{authToken}}
+
+### Signour front end
+ # @name signout
+POST {{baseUrl}}/users/signout HTTP/1.1
+Authorization: {{authToken}}
+

@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
+/* ZHIL Faker home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'NHCR Tester' });
+  res.render('index', { title: 'ZHIL Faker' });
 });
 
 module.exports = router;

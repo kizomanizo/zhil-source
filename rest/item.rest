@@ -1,0 +1,60 @@
+# Variables
+@baseUrl = http://localhost:4005/api/v1
+@int = {{$randomInt 1000 9999}}
+@authToken = {{login.response.body.message}}
+@addeditemId = {{createitem.response.body.message.id}}
+
+### Get all items
+GET {{baseUrl}}/items/ HTTP/1.1
+Authorization: {{authToken}}
+
+### Add new item
+# @name createitem
+POST {{baseUrl}}/items/ HTTP/1.1
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "name": "{{int}}item",
+    "description": "{{int}} item created for test purposes.",
+    "batch_number": "T20220918ZNZ",
+    "purchase_date": "{{$datetime rfc1123}}",
+    "expiry_date": "2023-10-01",
+    "buying_price": 3000,
+    "selling_price": 4000
+}
+
+### Get item details
+GET {{baseUrl}}/items/{{addeditemId}}
+Authorization: {{authToken}}
+
+### Update Specific item Details
+PATCH {{baseUrl}}/items/{{addeditemId}} HTTP/1.1
+Content-Type: application/json
+Authorization: {{authToken}}
+
+{
+    "name": "{{int}}item",
+    "description": "{{int}} item created for test purposes.",
+    "batch_number": "Z0923900TNT",
+    "purchase_date": "{{$datetime rfc1123}}",
+    "expiry_date": "2023-12-01",
+    "buying_price": 2000,
+    "selling_price": 3000,
+    "status": true
+}
+
+### Delete a specific item
+DELETE {{baseUrl}}/items/{{addeditemId}} HTTP/1.1
+Content-Type: application/json
+Authorization: {{authToken}}
+
+### Post login credentials to get a token
+ # @name login
+POST {{baseUrl}}/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "Administrator",
+    "password": "{{$dotenv DEMO_PASSWORD}}"
+}
